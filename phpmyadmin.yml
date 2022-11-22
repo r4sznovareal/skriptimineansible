@@ -1,0 +1,30 @@
+---
+- hosts: webservers
+  tasks:
+
+  - name: php moodulite installeerimine
+    command: apt install php php-cgi php-mysqli php-pear php-mbstring php-gettext libapache2-mod-php php-common php-phpseclib php-mysql$
+
+  - name: debconf for pma
+    debconf: name=phpmyadmin question='phpmyadmin/dbconfig-install' value='true' vtype='boolean'
+
+  - name: debconf for pma
+    debconf: name=phpmyadmin question='phpmyadmin/app-password-confirm' value='qwerty' vtype='password'
+
+  - name: debconf for pma
+    debconf: name=phpmyadmin question='phpmyadmin/mysql/admin-pass' value='qwerty' vtype='password'
+
+  - name: debconf for pma
+    debconf: name=phpmyadmin question='phpmyadmin/mysql/app-pass' value='qwerty' vtype='password'
+
+  - name: debconf for pma
+    debconf: name=phpmyadmin question='phpmyadmin/reconfigure-webserver' value='' vtype='multiselect'
+
+  - name: install pma
+    unarchive:
+     src: https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+     dest: /var/www/html/
+     remote_src: yes
+
+  - name: confi faili kopeerimine
+    command: cp /var/www/html/phpmyadmin/config.sample.inc.php /var/www/html/phpmyadmin/config.inc.php
