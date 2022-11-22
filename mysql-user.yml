@@ -1,0 +1,27 @@
+---
+- hosts: webservers
+  tasks:
+
+  - name: python mysqldb installeerimine
+    apt: name=python-mysqldb update_cache=yes state=latest
+
+  - name: Root login faili loomine
+    copy:
+     dest: /root/.my.cnf
+     owner: root
+     group: root
+     mode: 0600
+     content: |
+         [client]
+         user = root
+         password = qwerty
+
+  - name: Kasutaja "root" loomine ja parooli "qwerty" maaramine koos koikide privileegidega
+    mysql_user:
+      name: root
+      password: qwerty
+      priv: "*.*:ALL,GRANT"
+      state: present
+
+  - name: mysql restartimine
+    service: name=mysql state=restarted
